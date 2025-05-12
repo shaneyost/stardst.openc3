@@ -3,16 +3,21 @@
 #include <thread>
 #include <chrono>
 
+NavigationSubsystem::NavigationSubsystem(std::atomic<bool>& runningFlag)
+    : running(runningFlag) {}
+
 void NavigationSubsystem::run()
 {
-    while (true)
+    while (running.load())
     {
-        std::cout << "[NavigationSubsystem::run]\n" 
+        std::cout << "[NavigationSubsystem::run] " 
         << "simulating telemetry"
         << std::endl;
-
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
+    std::cout << "[NavigationSubsystem::run] "
+    << "stopping cleanly."
+    << std::endl;
 }
 
 /*

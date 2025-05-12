@@ -8,7 +8,7 @@ class ThreadFactory
 {
 public:
     template <typename SubsystemType>
-    void launch();
+    void launch(std::atomic<bool>& runningFlag);
     ~ThreadFactory();
 private:
     std::vector<std::thread> threads;

@@ -1,10 +1,14 @@
 #pragma once
 #include "Subsystem.hpp"
+#include <atomic>
 
 class NavigationSubsystem : public Subsystem
 {
 public:
+    NavigationSubsystem(std::atomic<bool>& runningFlag);
     void run() override;
+private:
+    std::atomic<bool>& running;
 };
 
 /*

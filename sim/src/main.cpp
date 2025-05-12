@@ -1,17 +1,21 @@
 #include "ThreadFactory.hpp"
 #include "NavigationSubsystem.hpp"
-#include <thread>
-#include <chrono>
+#include <atomic>
 #include <iostream>
 
 int main()
 {
+    std::atomic<bool> running(true);
+
     ThreadFactory factory;
-    factory.launch<NavigationSubsystem>();
+    factory.launch<NavigationSubsystem>(running);
 
-    std::this_thread::sleep_for(std::chrono::seconds(5));
-    std::cout << "Main thread exiting (sim continues in detached threads)." << std::endl;
+    std::cout << "Press ENTER to stop simulation..." << std::endl;
+    std::cin.get();
 
+    running.store(false);
+
+    std::cout << "All subsystems stopped. Exiting cleanly." << std::endl;
     return 0;
 }
 

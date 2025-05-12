@@ -6,15 +6,15 @@ ThreadFactory::~ThreadFactory()
     {
         if (thread.joinable())
         {
-            thread.detach();
+            thread.join();
         }
     }
 }
 
 template <typename SubsystemType>
-void ThreadFactory::launch()
+void ThreadFactory::launch(std::atomic<bool>& runningFlag)
 {
-    std::unique_ptr<Subsystem> subsystem = std::make_unique<SubsystemType>();
+    std::unique_ptr<Subsystem> subsystem = std::make_unique<SubsystemType>(runningFlag);
     threads.emplace_back([subsystem = std::move(subsystem)]()
     {
         subsystem->run();
@@ -23,7 +23,7 @@ void ThreadFactory::launch()
 
 // Explicit instantiation for known subsystem types
 #include "NavigationSubsystem.hpp"
-template void ThreadFactory::launch<NavigationSubsystem>();
+template void ThreadFactory::launch<NavigationSubsystem>(std::atomic<bool>&);
 
 /*
 *   INFO:   Since I'm picking back up w/ Cpp I'm going to document stuff along 
