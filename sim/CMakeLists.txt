@@ -19,12 +19,12 @@ else()
 endif()
 
 # Automatically collect all .cpp files
-file(GLOB SOURCES CONFIGURE_DEPENDS sim/src/*.cpp)
+file(GLOB SOURCES CONFIGURE_DEPENDS src/*.cpp)
 
 add_executable(${TARGET_NAME} ${SOURCES})
 
 target_include_directories(${TARGET_NAME} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/sim/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 find_package(Threads REQUIRED)

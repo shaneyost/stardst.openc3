@@ -1,7 +1,7 @@
 # stardst.openc3
 
 ```bash
-mkdir build && cd build
+cd sim && mkdir bld && cd bld
 cmake ../
 make
 ```
