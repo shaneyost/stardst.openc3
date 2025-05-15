@@ -1,5 +1,10 @@
 #include "NavigationSubsystem.hpp"
+#include "CcsdsPrimaryHeader.hpp"
+#include "CcsdsSecondaryHeader.hpp"
+#include "CcsdsPacket.hpp"
+
 #include <iostream>
+#include <iomanip>
 #include <thread>
 #include <chrono>
 
@@ -8,16 +13,29 @@ NavigationSubsystem::NavigationSubsystem(std::atomic<bool>& runningFlag)
 
 void NavigationSubsystem::run()
 {
+    auto prihdr = CcsdsPrimaryHeader::createTelemetryPacket(42);
     while (running.load())
     {
-        std::cout << "[NavigationSubsystem::run] " 
-        << "simulating telemetry"
-        << std::endl;
+        auto sechdr = CcsdsSecondaryHeader::now();
+        prihdr.incrementSequenceCount();
+        std::vector<uint8_t> data = {0xDE, 0xAD, 0xBE, 0xEF};
+
+        CcsdsPacket packet(prihdr, sechdr, std::move(data));
+        auto serialized = packet.serialize(); // fully compliant CCSDS packet
+
+        std::cout << "[NavigationSubsystem::run] Pkt: " << std::endl;
+        for (auto byte : serialized)
+        {
+            std::cout << std::hex << std::setw(2) << std::setfill('0')
+            << static_cast<int>(byte) << " ";
+        }
+        std::cout << std::dec << std::endl;
+
+
+
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-    std::cout << "[NavigationSubsystem::run] "
-    << "stopping cleanly."
-    << std::endl;
+    std::cout << "[NavigationSubsystem::run] " << "stopping cleanly." << std::endl;
 }
 
 /*
