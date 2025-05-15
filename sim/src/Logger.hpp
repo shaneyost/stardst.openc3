@@ -11,7 +11,7 @@ class Logger
 public:
     static constexpr size_t DEFAULT_DUMP_LEN = 12;
 
-    // Define the template directly in the header
+    // defining template here for now, think this is ok
     template <typename... Args>
     static void info(const std::string& format, Args... args)
     {

@@ -1,45 +1,41 @@
 #pragma once
 #include "Subsystem.hpp"
+#include "NavigationSimulationConfig.hpp"
+
 #include <atomic>
+#include <memory>
+#include <string>
 
 class NavigationSubsystem : public Subsystem
 {
 public:
     NavigationSubsystem(std::atomic<bool>& runningFlag);
     void run() override;
-private:
-    std::atomic<bool>& running;
-};
+    void setFieldModel(const std::string& field_name, std::shared_ptr<SimulationStrategy> strategy);
 
-/*
-*   INFO:   Since I'm picking back up w/ Cpp I'm going to document stuff along 
-*           the way as I relearn things.
-*
-*   Initially I forgot the syntax convention for implying inheritance. So lets
-*   take a small note on what ":" means.
-*
-*       This ":" means "inherits from". "NavigationSubsystem" is a kind of 
-*       "Subsystem". The ":" introduces a base class in inheritance. Is-a
-*
-*       Prepending "public" says inherit all public and protected members of 
-*       Subsystem. Make them accessible in the same way to users of
-*       NavigationSubsystem.
-*
-*   So why make "run()" public?
-*
-*       I've declared "run()" as public in Subsystem class so derived classes
-*       must match or be less restrictive. 
-*
-*       ThreadFactory, which owns a Subsystem, needs to call "run()" on it. 
-*       Public lets outside code (like my ThreadFactory) run the subsystem.
-*
-*       It might be helpful to understand here that ThreadFactory is a runner.
-*       Subsystem and NavigationSubsystem are the runnables.
-*
-*           - "Subsystem.hpp (Here's what a runnable looks like"
-*           - "NavigationSubsystem.hpp/cpp (Here's a runnable that does this)
-*           - "ThreadFactory.hpp/cpp (Here's how to run one in a thread)
-*
-*       Best typically to define what to run first, then you define how to run
-*       it.
-*/
+private:
+    struct NavigationTelemetry
+    {
+        uint8_t  system_status = 0;
+        uint8_t  nav_mode = 0;
+        uint32_t target_distance_m = 0;
+        int32_t  relative_velocity_mps = 0;
+        int16_t  yaw_rate_dps = 0;
+        int16_t  pitch_rate_dps = 0;
+        int16_t  roll_rate_dps = 0;
+        float    engine_temp_c = 0.0f;
+        float    gyro_drift_ppm = 0.0f;
+        uint8_t  hyperdrive_charge_pct = 0;
+        double   course_correction_x_m = 0.0;
+        double   course_correction_y_m = 0.0;
+        double   course_correction_z_m = 0.0;
+        float    positional_error_m = 0.0f;
+        uint16_t checksum = 0;
+    };
+
+    std::atomic<bool>& running;
+    NavigationTelemetry telemetry_;
+    NavigationSimulationConfig config_;
+    void simulate();
+    std::vector<uint8_t> packTelemetry() const;
+};
