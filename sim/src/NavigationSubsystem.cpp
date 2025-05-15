@@ -2,6 +2,7 @@
 #include "CcsdsPrimaryHeader.hpp"
 #include "CcsdsSecondaryHeader.hpp"
 #include "CcsdsPacket.hpp"
+#include "Logger.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -23,19 +24,10 @@ void NavigationSubsystem::run()
         CcsdsPacket packet(prihdr, sechdr, std::move(data));
         auto serialized = packet.serialize(); // fully compliant CCSDS packet
 
-        std::cout << "[NavigationSubsystem::run] Pkt: " << std::endl;
-        for (auto byte : serialized)
-        {
-            std::cout << std::hex << std::setw(2) << std::setfill('0')
-            << static_cast<int>(byte) << " ";
-        }
-        std::cout << std::dec << std::endl;
-
-
-
+        Logger::dump(serialized, serialized.size());
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-    std::cout << "[NavigationSubsystem::run] " << "stopping cleanly." << std::endl;
+    Logger::info("Stopping NavigationSubsystem thread");
 }
 
 /*
