@@ -125,8 +125,8 @@ void NavigationSubsystem::run()
         CcsdsPacket packet(prihdr, sechdr, std::move(data));
         auto serialized = packet.serialize();  // fully compliant ccsds packet v1
 
-        /*LOG_VECTOR(serialized, serialized.size());*/
-        LOG_VECTOR(serialized, 14);
+        /*LOG_VECTOR_WARN(serialized, serialized.size());*/
+        LOG_VECTOR_WARN(serialized, 14);
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 

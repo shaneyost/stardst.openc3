@@ -62,7 +62,8 @@ public:
              std::cout << std::hex << std::setw(2) << std::setfill('0')
                        << static_cast<int>(data[i]) << " ";
         }
-        if (total_len < len_to_print)
+
+        if (total_len >= len_to_print)
         {
             std::cout << "... (" << total_len << " bytes total)";
         }
@@ -138,5 +139,11 @@ private:
 #define LOG_WARN(...) Logger::log("WARN", __FILE__, __func__, __LINE__, __VA_ARGS__)
 #define LOG_INFO(...) Logger::log("INFO", __FILE__, __func__, __LINE__, __VA_ARGS__)
 #define LOG_DEBUG(...) Logger::log("DEBUG", __FILE__, __func__, __LINE__, __VA_ARGS__)
-#define LOG_BUFFER(data, tlen, plen) Logger::buf("DEBUG", __FILE__, __func__, __LINE__, data, tlen, plen)
-#define LOG_VECTOR(data, plen) Logger::buf("DEBUG", __FILE__, __func__, __LINE__, data, plen)
+
+#define LOG_BUFFER_WARN(d, tl, pl) Logger::buf("WARN", __FILE__, __func__, __LINE__, d, tl, pl)
+#define LOG_BUFFER_INFO(d, tl, pl) Logger::buf("INFO", __FILE__, __func__, __LINE__, d, tl, pl)
+#define LOG_BUFFER_DEBUG(d, tl, pl) Logger::buf("DEBUG", __FILE__, __func__, __LINE__, d, tl, pl)
+
+#define LOG_VECTOR_WARN(d, pl) Logger::buf("WARN", __FILE__, __func__, __LINE__, d, pl)
+#define LOG_VECTOR_INFO(d, pl) Logger::buf("INFO", __FILE__, __func__, __LINE__, d, pl)
+#define LOG_VECTOR_DEBUG(d, pl) Logger::buf("DEBUG", __FILE__, __func__, __LINE__, d, pl)
