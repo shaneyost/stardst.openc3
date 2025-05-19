@@ -1,5 +1,7 @@
 #include "ThreadFactory.hpp"
 #include "NavigationSubsystem.hpp"
+#include "Logger.hpp"
+
 #include <atomic>
 #include <iostream>
 
@@ -10,12 +12,12 @@ int main()
     ThreadFactory factory;
     factory.launch<NavigationSubsystem>(running);
 
-    std::cout << "Press ENTER to stop simulation..." << std::endl;
+    LOG_INFO("Press ENTER to stop simulation...");
     std::cin.get();
 
     running.store(false);
 
-    std::cout << "All subsystems stopped. Exiting cleanly." << std::endl;
+    LOG_INFO("All subsystems stopped. Exiting cleanly...");
     return 0;
 }
 
