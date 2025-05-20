@@ -12,12 +12,12 @@ int main()
     ThreadFactory factory;
     factory.launch<NavigationSubsystem>(running);
 
-    LOG_INFO("Press ENTER to stop simulation...");
+    LOG(Logger::Level::INFO, "Press ENTER to stop simulation...");
     std::cin.get();
 
     running.store(false);
 
-    LOG_INFO("All subsystems stopped. Exiting cleanly...");
+    LOG(Logger::Level::INFO, "All subsystems stopped. Exiting cleanly...");
     return 0;
 }
 
